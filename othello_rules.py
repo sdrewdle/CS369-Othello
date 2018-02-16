@@ -159,6 +159,8 @@ def successor(state, move, color):
         # then flip 'em
         for pos in flippable:
             new[pos[0]][pos[1]] = color
+    # set the primary piece
+    new[move[0]][move[1]] = color
     return new
 
 
