@@ -117,7 +117,7 @@ def legal_moves(state, color):
         for c,item in enumerate(row):
             if item is "." and flips_something(state,r,c,color):
                 x.append( (r,c) )
-    if(len(x) is 0):
+    if len(x) is 0:
         return ['pass']
     return x
 
@@ -127,6 +127,9 @@ def successor(state, move, color):
     Returns the state that would result from color playing move (which is either a pair (r, c) or 'pass'.
     Assumes move is legal.
     """
+
+    if move == 'pass':
+        return state
 
     # dupe the list
     new = [list(a) for a in state]
