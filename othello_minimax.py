@@ -59,9 +59,9 @@ def best_move(state, player, max_depth):
     """Returns player's best move. max_depth, which must be at least 1, gives the search depth."""
     moves = legal_moves(state, player)
     if player == '#':
-        return max(moves, key=lambda m: minimax(successor(state, m, player), 'O', max_depth))
+        return max(moves, key=lambda m: minimax(successor(state, m, player), 'O', max_depth - 1))
     if player == 'O':
-        return min(moves, key=lambda m: minimax(successor(state, m, player), '#', max_depth))
+        return min(moves, key=lambda m: minimax(successor(state, m, player), '#', max_depth - 1))
 
 
 if __name__ == '__main__':
