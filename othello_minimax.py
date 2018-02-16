@@ -7,8 +7,17 @@ def evaluate(state):
     If the game is not over, returns score / 100, giving a number from -0.64 to 0.64.
     This way, search will prefer winning to merely being ahead by any amount.
     """
-    # TODO You have to write this
 
+    points = score(state)
+    if game_over(state):
+        if points == 0:
+            return 0;
+        elif points < 0:
+            return -1
+        elif points > 0:
+            return 1
+    else:
+        return score(state)/100.0
 
 def minimax(state, player, max_depth):
     """
