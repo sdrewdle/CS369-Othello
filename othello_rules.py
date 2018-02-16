@@ -73,30 +73,12 @@ def flips(state, r, c, color, dr, dc):
     :return A list of (r, c) pairs of pieces that would be flipped.
     """
     flip_list = []
-    # print(r)
-    # print(c)
-    # print(prettify(state))
-    # try:
-    #     while state[r+dr][c+dc] is color and state[r+dr][c+dc] is not '.':
-    #         r += dr
-    #         c += dc
-    #         if 0 <= r < 8 and 0 <= c < 8:
-    #             if state[r][c] is opposite(color):
-    #                 flip_list.append((r, c))
-    #         else:
-    #             break
-    #
-    #     return flip_list
-    # except:
-    #     return []
     i = 1
     while True:
         nr = r + i*dr
         nc = c + i*dc
         if nr < 0 or nr > 7 or nc > 7 or nc < 0:
             break
-
-        print((nr,nc))
 
         if state[nr][nc] is ".":
             break
@@ -130,14 +112,10 @@ def legal_moves(state, color):
     Returns a list of legal moves ((r, c) pairs) that color can make from state. Note that a player must flip
     something if possible; otherwise they must play the special move 'pass'.
     """
-
-    print(color)
     x = []
     for r,row in enumerate(state):
         for c,item in enumerate(row):
             if item is "." and flips_something(state,r,c,color):
-                print(state[r][c])
-                print( (r,c))
                 x.append( (r,c) )
     if(len(x) is 0):
         return ['pass']
