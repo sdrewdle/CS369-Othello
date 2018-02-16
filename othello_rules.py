@@ -3,7 +3,7 @@ from copy import deepcopy
 
 def diagram_to_state(diagram):
     """Converts a list of strings into a list of lists of characters (strings of length 1.)"""
-    return [list(x) for x in diagram]
+    return [list(a) for a in diagram]
 
 
 INITIAL_STATE = diagram_to_state(['........',
@@ -18,7 +18,12 @@ INITIAL_STATE = diagram_to_state(['........',
 
 def count_pieces(state):
     """Returns a dictionary of the counts of '#', 'O', and '.' in state."""
-    # TODO You have to write this
+    result = {'#': 0, 'O': 0, '.': 0}
+    for row in state:
+        for square in row:
+            result[square] += 1
+
+    return result
 
 
 def prettify(state):
@@ -26,12 +31,32 @@ def prettify(state):
     Returns a single human-readable string representing state, including row and column indices and counts of
     each color.
     """
-    # TODO You have to write this
+    visual = ' 01234567\n'
+    result = {'#': 0, 'O': 0, '.': 0}
+    i = 0
+
+    for row in state:
+        for square in row:
+            result[square] += 1
+
+    for row in state:
+        updatedRow = ''.join(row)
+        visual += (str(i) + updatedRow + str(i) + '\n')
+        i = int(i)
+        i += 1
+    visual += ' 01234567\n'
+
+    visual += (str(result) + '\n')
+
+    return visual
 
 
 def opposite(color):
     """opposite('#') returns 'O'. opposite('O') returns '#'."""
-    # TODO You have to write this
+    if color is '#':
+        return 'O'
+    elif color is 'O':
+        return '#'
 
 
 def flips(state, r, c, color, dr, dc):
@@ -47,15 +72,32 @@ def flips(state, r, c, color, dr, dc):
     :param dc: The amount to adjust c on each step along the line.
     :return A list of (r, c) pairs of pieces that would be flipped.
     """
-    # TODO You have to write this
+
+    flip_list = []
+    while state[r][c] is not color and state[r+dr][c+dc] is not '.':
+        r += dr
+        c += dc
+        if r and c >= 0:
+
+            if state[r][c] is opposite(color):
+                flip_list.append((r, c))
+        else:
+            break
+
+    return flip_list
 
 
-OFFSETS = ((-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1))
+OFFSETS = ((-1, 0), (-1, 1), (0, 1), (1, 1),
+           (1, 0), (1, -1), (0, -1), (-1, -1))
 
 
 def flips_something(state, r, c, color):
     """Returns True if color playing at r, c in state would flip something."""
-    # TODO You have to write this
+    for cord in OFFSETS:
+        x = flips(state, r, c, color, cord[0], cord[1])
+        if x:
+            return True
+    return False
 
 
 def legal_moves(state, color):
@@ -79,7 +121,14 @@ def score(state):
     Returns the scores in state. More positive values (up to 64 for occupying the entire board) are better for '#'.
     More negative values (down to -64) are better for 'O'.
     """
-    # TODO You have to write this
+    total = 0
+    for row in state:
+        for tile in row:
+            if tile is 'O':
+                total -= 1
+            if tile is '#':
+                total += 1
+    return total
 
 
 def game_over(state):
