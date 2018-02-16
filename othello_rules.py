@@ -72,19 +72,44 @@ def flips(state, r, c, color, dr, dc):
     :param dc: The amount to adjust c on each step along the line.
     :return A list of (r, c) pairs of pieces that would be flipped.
     """
-
     flip_list = []
-    while state[r][c] is not color and state[r+dr][c+dc] is not '.':
-        r += dr
-        c += dc
-        if r and c >= 0:
-
-            if state[r][c] is opposite(color):
-                flip_list.append((r, c))
-        else:
+    # print(r)
+    # print(c)
+    # print(prettify(state))
+    # try:
+    #     while state[r+dr][c+dc] is color and state[r+dr][c+dc] is not '.':
+    #         r += dr
+    #         c += dc
+    #         if 0 <= r < 8 and 0 <= c < 8:
+    #             if state[r][c] is opposite(color):
+    #                 flip_list.append((r, c))
+    #         else:
+    #             break
+    #
+    #     return flip_list
+    # except:
+    #     return []
+    i = 1
+    while True:
+        nr = r + i*dr
+        nc = c + i*dc
+        if nr < 0 or nr > 7 or nc > 7 or nc < 0:
             break
 
-    return flip_list
+        print((nr,nc))
+
+        if state[nr][nc] is ".":
+            break
+
+        flip_list.append((nr, nc))
+        if state[nr][nc] is color:
+            flip_list.pop()
+            return flip_list
+        i += 1
+    return []
+
+
+
 
 
 OFFSETS = ((-1, 0), (-1, 1), (0, 1), (1, 1),
@@ -105,7 +130,18 @@ def legal_moves(state, color):
     Returns a list of legal moves ((r, c) pairs) that color can make from state. Note that a player must flip
     something if possible; otherwise they must play the special move 'pass'.
     """
-    # TODO You have to write this
+
+    print(color)
+    x = []
+    for r,row in enumerate(state):
+        for c,item in enumerate(row):
+            if item is "." and flips_something(state,r,c,color):
+                print(state[r][c])
+                print( (r,c))
+                x.append( (r,c) )
+    if(len(x) is 0):
+        return ['pass']
+    return x
 
 
 def successor(state, move, color):
