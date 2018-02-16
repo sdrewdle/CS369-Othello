@@ -127,7 +127,19 @@ def successor(state, move, color):
     Returns the state that would result from color playing move (which is either a pair (r, c) or 'pass'.
     Assumes move is legal.
     """
-    # TODO You have to write this
+
+    # dupe the list
+    new = [list(a) for a in state]
+    # for each "cardinal" direction
+    for d in OFFSETS:
+        # get flippable pieces
+        flippable = flips(state, move[0], move[1], color, d[0], d[1])
+        # then flip 'em
+        for pos in flippable:
+            new[pos[0]][pos[1]] = color
+    # set the primary piece
+    new[move[0]][move[1]] = color
+    return new
 
 
 def score(state):
@@ -149,4 +161,8 @@ def game_over(state):
     """
     Returns true if neither player can flip anything.
     """
-    # TODO You have to write this
+    if ('pass' in legal_moves(state, '#') and
+        'pass' in legal_moves(state, 'O')):
+        return True
+    else:
+        return False
