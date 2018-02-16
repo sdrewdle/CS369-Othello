@@ -3,7 +3,7 @@ from copy import deepcopy
 
 def diagram_to_state(diagram):
     """Converts a list of strings into a list of lists of characters (strings of length 1.)"""
-    # TODO You have to write this
+    return [list(x) for x in diagram]
 
 
 INITIAL_STATE = diagram_to_state(['........',
