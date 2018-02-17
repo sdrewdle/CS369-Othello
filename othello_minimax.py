@@ -19,25 +19,6 @@ def evaluate(state):
     else:
         return score(state)/100.0
 
-
-"""
-def minimax(state, player):
-    score=winner(state)
-    if score is not None:
-        return score
-    successors=(successor(state, move, player) for move in legal_moves(state))
-    if player=='X':
-        return max(minimax(s, 'O') for s in successors)
-    if player=='O':
-        return min(minimax(s,'X') for s in successors)
-def best_move(state, player):
-    moves=legal_moves(state)
-    if player=='X':
-        return max(moves, key=lambda m: minimax(successor(state, m, player), 'O'))
-    else:
-        return min(moves, key=lambda m: minimax(successor(state, m, player), 'X'))
-"""
-
 def minimax(state, player, max_depth):
     """
     Returns the value of state with player to play. max_depth gives the search depth; if 0, returns the evaluation

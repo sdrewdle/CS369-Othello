@@ -32,12 +32,7 @@ def prettify(state):
     each color.
     """
     visual = ' 01234567\n'
-    result = {'#': 0, 'O': 0, '.': 0}
     i = 0
-
-    for row in state:
-        for square in row:
-            result[square] += 1
 
     for row in state:
         updatedRow = ''.join(row)
@@ -46,17 +41,14 @@ def prettify(state):
         i += 1
     visual += ' 01234567\n'
 
-    visual += (str(result) + '\n')
+    visual += (str(count_pieces(state)) + '\n')
 
     return visual
 
 
 def opposite(color):
     """opposite('#') returns 'O'. opposite('O') returns '#'."""
-    if color is '#':
-        return 'O'
-    elif color is 'O':
-        return '#'
+    return {'#':'O', 'O':'#'}[color]
 
 
 def flips(state, r, c, color, dr, dc):
@@ -77,16 +69,13 @@ def flips(state, r, c, color, dr, dc):
     while True:
         nr = r + i*dr
         nc = c + i*dc
-        if nr < 0 or nr > 7 or nc > 7 or nc < 0:
+        if nr < 0 or nr > 7 or nc > 7 or nc < 0 or state[nr][nc] is ".":
             break
 
-        if state[nr][nc] is ".":
-            break
+        if state[nr][nc] is color:
+            return flip_list
 
         flip_list.append((nr, nc))
-        if state[nr][nc] is color:
-            flip_list.pop()
-            return flip_list
         i += 1
     return []
 
@@ -101,8 +90,7 @@ OFFSETS = ((-1, 0), (-1, 1), (0, 1), (1, 1),
 def flips_something(state, r, c, color):
     """Returns True if color playing at r, c in state would flip something."""
     for cord in OFFSETS:
-        x = flips(state, r, c, color, cord[0], cord[1])
-        if x:
+        if flips(state, r, c, color, cord[0], cord[1]):
             return True
     return False
 
