@@ -11,7 +11,7 @@ def evaluate(state):
     points = score(state)
     if game_over(state):
         if points == 0:
-            return 0;
+            return 0
         elif points < 0:
             return -1
         elif points > 0:
