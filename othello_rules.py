@@ -1,10 +1,7 @@
-from copy import deepcopy
-
 
 def diagram_to_state(diagram):
     """Converts a list of strings into a list of lists of characters (strings of length 1.)"""
     return [list(a) for a in diagram]
-
 
 INITIAL_STATE = diagram_to_state(['........',
                                   '........',
@@ -15,7 +12,6 @@ INITIAL_STATE = diagram_to_state(['........',
                                   '........',
                                   '........'])
 
-
 def count_pieces(state):
     """Returns a dictionary of the counts of '#', 'O', and '.' in state."""
     result = {'#': 0, 'O': 0, '.': 0}
@@ -24,7 +20,6 @@ def count_pieces(state):
             result[square] += 1
 
     return result
-
 
 def prettify(state):
     """
@@ -45,11 +40,9 @@ def prettify(state):
 
     return visual
 
-
 def opposite(color):
     """opposite('#') returns 'O'. opposite('O') returns '#'."""
     return {'#':'O', 'O':'#'}[color]
-
 
 def flips(state, r, c, color, dr, dc):
     """
@@ -79,21 +72,15 @@ def flips(state, r, c, color, dr, dc):
         i += 1
     return []
 
-
-
-
-
 OFFSETS = ((-1, 0), (-1, 1), (0, 1), (1, 1),
            (1, 0), (1, -1), (0, -1), (-1, -1))
 
-
 def flips_something(state, r, c, color):
     """Returns True if color playing at r, c in state would flip something."""
-    for cord in OFFSETS:
-        if flips(state, r, c, color, cord[0], cord[1]):
+    for dr,dc in OFFSETS:
+        if flips(state, r, c, color, dr, dc):
             return True
     return False
-
 
 def legal_moves(state, color):
     """
@@ -105,10 +92,8 @@ def legal_moves(state, color):
         for c,item in enumerate(row):
             if item is "." and flips_something(state,r,c,color):
                 x.append( (r,c) )
-    if len(x) is 0:
-        return ['pass']
-    return x
 
+    return x if len(x) > 0 else ['pass']
 
 def successor(state, move, color):
     """
@@ -118,21 +103,23 @@ def successor(state, move, color):
 
     if move == 'pass':
         return state
+    moveR, moveC = move
 
     # dupe the list
     new = [list(a) for a in state]
+
     # for each "cardinal" direction
-    for d in OFFSETS:
+    for dr,dc in OFFSETS:
         # get flippable pieces
-        flippable = flips(state, move[0], move[1], color, d[0], d[1])
+        flippable = flips(state, moveR, moveC, color, dr, dc)
         # then flip 'em
-        for pos in flippable:
-            new[pos[0]][pos[1]] = color
+        for r,c in flippable:
+            new[r][c] = color
     # set the primary piece
-    new[move[0]][move[1]] = color
+    new[moveR][moveC] = color
     return new
 
-
+SCORES = {'O':-1, '#': 1, '.': 0}
 def score(state):
     """
     Returns the scores in state. More positive values (up to 64 for occupying the entire board) are better for '#'.
@@ -141,19 +128,11 @@ def score(state):
     total = 0
     for row in state:
         for tile in row:
-            if tile is 'O':
-                total -= 1
-            if tile is '#':
-                total += 1
+            total += SCORES[tile]
     return total
-
 
 def game_over(state):
     """
     Returns true if neither player can flip anything.
     """
-    if ('pass' in legal_moves(state, '#') and
-        'pass' in legal_moves(state, 'O')):
-        return True
-    else:
-        return False
+    return 'pass' in legal_moves(state,'#') and 'pass' in legal_moves(state,'O')
